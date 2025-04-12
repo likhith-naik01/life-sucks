@@ -1,67 +1,74 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';
+import { Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
-const friendsData = {
-  labels: ['You 👤', 'Alex 🧠', 'Sam 🎯', 'Jamie 💪', 'Riley 🚀'],
-  datasets: [
-    {
-      data: [75, 50, 90, 60, 80], // Percentages of task completion
-    },
-  ],
-};
-
-const chartConfig = {
-  backgroundGradientFrom: '#e0f7fa', // pale blue
-  backgroundGradientTo: '#e0f7fa',
-  decimalPlaces: 0,
-  color: (opacity = 1) => `rgba(0, 102, 204, ${opacity})`, // darker blue bars
-  labelColor: (opacity = 1) => `rgba(0, 51, 102, ${opacity})`, // label color
-  propsForBackgroundLines: {
-    stroke: '#b3d9ff',
-  },
-  barPercentage: 0.6,
-  useShadowColorFromDataset: false,
-};
-
 const FriendsComparisonScreen = () => {
+  const [friendsProgress, setFriendsProgress] = useState([
+    { name: 'Alice', progress: 80 },
+    { name: 'Bob', progress: 50 },
+    { name: 'Charlie', progress: 75 },
+    { name: 'David', progress: 60 },
+  ]);
+
+  const data = {
+    labels: friendsProgress.map((friend) => friend.name),
+    datasets: [
+      {
+        data: friendsProgress.map((friend) => friend.progress),
+        color: (opacity = 1) => `rgba(3, 155, 229, ${opacity})`, // Blue
+        strokeWidth: 2,
+      },
+    ],
+  };
+
+  const chartConfig = {
+    backgroundColor: '#e0f7fa',
+    backgroundGradientFrom: '#e0f7fa',
+    backgroundGradientTo: '#e0f7fa',
+    decimalPlaces: 0,
+    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    style: {
+      borderRadius: 16,
+    },
+  };
+
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>📊 Friends Progress</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Friends' Task Completion</Text>
       <BarChart
-        data={friendsData}
-        width={screenWidth - 30}
-        height={260}
+        data={data}
+        width={screenWidth - 40}
+        height={220}
         chartConfig={chartConfig}
-        verticalLabelRotation={0}
+        verticalLabelRotation={30}
         style={styles.chart}
-        showBarTops={true}
-        withInnerLines={true}
       />
-    </ScrollView>
+    </View>
   );
 };
-
-export default FriendsComparisonScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e0f7fa', // light blue background
-    paddingTop: 60,
-    paddingHorizontal: 15,
+    paddingTop: 80,
+    paddingHorizontal: 20,
+    backgroundColor: '#e0f7fa',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#004d99',
+    marginBottom: 10,
+    color: '#039be5',
     textAlign: 'center',
-    marginBottom: 20,
   },
   chart: {
+    marginTop: 20,
     borderRadius: 16,
-    marginVertical: 10,
   },
 });
+
+export default FriendsComparisonScreen;
